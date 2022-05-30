@@ -1,14 +1,15 @@
-import express from "express";
-import conectarDB from "./config/db.js";
-import router from "./routers/index.js";
+import express from 'express';
+import conectarDB from './config/db.js';
+import router from './routers/index.js';
 
-import "dotenv/config";
+import 'dotenv/config';
 
 const app = express();
+app.use(express.json());
 conectarDB();
 
 // Routing
-app.use("/api/", router);
+app.use('/api', router);
 
 app.listen(process.env.PORT, process.env.HOST, () => {
   console.log(

@@ -1,4 +1,5 @@
-import { mongoose } from "mongoose";
+import { mongoose } from 'mongoose';
+import bcrypt from 'bcrypt';
 
 const usuarioSchema = mongoose.Schema(
   {
@@ -29,5 +30,26 @@ const usuarioSchema = mongoose.Schema(
   { timestamps: true }
 );
 
-const Usuario = mongoose.model("Usuario", usuarioSchema);
+// Encriptamos el password, antes de guardarlo en la BD
+usuarioSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Ocultamos los campos que no utilizaremos en las respuestas
+usuarioSchema.method('toJSON', function () {
+  const { __v, password, confirmado, token, createdAt, updatedAt, ...object } =
+    this.toObject();
+  return object;
+});
+
+// Comprobar password
+usuarioSchema.methods.comprobarPassword = async function (passwordFormulario) {
+  return await bcrypt.compare(passwordFormulario, this.password);
+};
+
+const Usuario = mongoose.model('Usuario', usuarioSchema);
 export default Usuario;
