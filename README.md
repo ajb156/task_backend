@@ -5,8 +5,8 @@
 
 ## Variables de entorno (.env)
 
-PORT=
-HOST=
-JWT_SECRET=
-JWT_EXPIRES_IN=
-MONGO_URL=
+- PORT=
+- HOST=
+- JWT_SECRET=
+- JWT_EXPIRES_IN=
+- MONGO_URL=
