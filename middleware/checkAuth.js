@@ -30,7 +30,6 @@ const checkAuth = async (req, res, next) => {
       msg: error.message,
     });
   }
-
   next();
 };
 

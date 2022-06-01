@@ -25,6 +25,11 @@ export const nuevoProyecto = async (req, res) => {
   }
 };
 
+/**
+ * Muestra un proyecto
+ * @param {id} req id proyecto
+ * @returns proyecto
+ */
 export const obtenerProyecto = async (req, res) => {
   const { id } = req.params;
 
@@ -48,9 +53,67 @@ export const obtenerProyecto = async (req, res) => {
   res.json(proyecto);
 };
 
-export const editarProyecto = async (req, res) => {};
+export const editarProyecto = async (req, res) => {
+  const { id } = req.params;
+  const proyecto = await Proyecto.findById(id);
 
-export const eliminarProyecto = async (req, res) => {};
+  if (!proyecto) {
+    const error = new Error('No encontrado');
+    return res.status(404).json({
+      msg: error.message,
+    });
+  }
+
+  // Comprobamos que el usuario autenticado sea el que creo el proyecto
+  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+    const error = new Error('Accion no valida');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+
+  proyecto.nombre = req.body.nombre || proyecto.nombre;
+  proyecto.descripcion = req.body.descripcion || proyecto.descripcion;
+  proyecto.fechaEntrega = req.body.fechaEntrega || proyecto.fechaEntrega;
+  proyecto.cliente = req.body.cliente || proyecto.cliente;
+
+  try {
+    const updateProyect = await proyecto.save();
+    res.json({ updateProyect });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const eliminarProyecto = async (req, res) => {
+  const { id } = req.params;
+
+  const proyecto = await Proyecto.findById(id);
+
+  if (!proyecto) {
+    const error = new Error('No encontrado');
+    return res.status(404).json({
+      msg: error.message,
+    });
+  }
+
+  // Comprobamos que el usuario autenticado sea el que creo el proyecto
+  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+    const error = new Error('Accion no valida');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+
+  try {
+    await proyecto.deleteOne();
+    res.status(200).json({
+      msg: 'Proyecto eliminado',
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const agregarColaborador = async (req, res) => {};
 
