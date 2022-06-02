@@ -7,11 +7,11 @@ import {
   eliminarColaborador,
   eliminarProyecto,
   nuevoProyecto,
-  obteberTareas,
   obtenerProyecto,
   obtenerProyectos,
 } from '../constrollers/ProyectoController.js';
 
+/** Rutas de proyectos */
 router.get('/', obtenerProyectos);
 router.post('/', nuevoProyecto);
 
@@ -21,7 +21,6 @@ router
   .put(editarProyecto)
   .delete(eliminarProyecto);
 
-router.get('/tareas/:id', obteberTareas);
 router.post('/agregar-colaborador/:id', agregarColaborador);
 router.post('/elimanar-colaborador/:id', eliminarColaborador);
 

@@ -39,6 +39,13 @@ export const obtenerTarea = async (req, res) => {
   const tarea = await Tarea.findById(id).populate('proyecto');
   const { proyecto } = tarea;
 
+  if (!tarea) {
+    const error = new Error('Tarea no encontrada');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+
   // Comprobamos que el usuario autenticado sea el que creo el proyecto
   if (proyecto.creador.toString() !== req.usuario._id.toString()) {
     const error = new Error('Accion no valida');
@@ -50,8 +57,89 @@ export const obtenerTarea = async (req, res) => {
   res.json(tarea);
 };
 
-export const actualizarTarea = async (req, res) => {};
+/**
+ * Actualiza una tarea, solo se lo permite al usuario logueado
+ * @returns Tarea
+ */
+export const actualizarTarea = async (req, res) => {
+  const { id } = req.params;
+  const tarea = await Tarea.findById(id).populate('proyecto');
+  const { proyecto } = tarea;
 
-export const eliminarTarea = async (req, res) => {};
+  if (!tarea) {
+    const error = new Error('Tarea no encontrada');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
 
-export const cambiarEstadoTarea = async (req, res) => {};
+  // Comprobamos que el usuario autenticado sea el que creo el proyecto
+  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+    const error = new Error('Accion no valida');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+
+  tarea.nombre = req.body.nombre || tarea.nombre;
+  tarea.descripcion = req.body.descripcion || tarea.descripcion;
+  tarea.prioridad = req.body.prioridad || tarea.prioridad;
+  tarea.fechaEntrega = req.body.fechaEntrega || tarea.fechaEntrega;
+
+  try {
+    const updateTarea = await Tarea.save();
+    res.json(200).json(tarea);
+  } catch (error) {
+    console.log(erro);
+  }
+};
+
+export const eliminarTarea = async (req, res) => {
+  const { id } = req.params;
+  const tarea = await Tarea.findById(id).populate('proyecto');
+  const { proyecto } = tarea;
+
+  // Comprobamos que el usuario autenticado sea el que creo el proyecto
+  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+    const error = new Error('Accion no valida');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+
+  try {
+    await Tarea.deleteOne();
+    res.status(200).json({ msg: 'Tarea eliminada' });
+  } catch (error) {
+    res.status(404).json({ msg: 'No se pudo eliminar la tarea' });
+  }
+};
+
+
+const obtenerTareas = async(req, res) => {
+  
+}
+
+
+export const cambiarEstadoTarea = async (req, res) => {
+  const { id } = req.params;
+  const tarea = await Tarea.findById(id).populate('proyecto');
+  const { proyecto } = tarea;
+
+  if (!tarea) {
+    const error = new Error('Tarea no encontrada');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+
+  // Comprobamos que el usuario autenticado sea el que creo el proyecto
+  if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+    const error = new Error('Accion no valida');
+    return res.status(402).json({
+      msg: error.message,
+    });
+  }
+};
+
+
