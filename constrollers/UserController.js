@@ -30,7 +30,6 @@ export const registrar = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.log(error);
     res.status(400).json({
       msg: 'El usario no se pudo registar',
     });
