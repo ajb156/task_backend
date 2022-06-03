@@ -9,9 +9,7 @@ const app = express();
 app.use(express.json());
 conectarDB();
 
-app.use(cors);
-
-const whiteList = ['http://localhost:3000'];
+const whiteList = ['*'];
 const corsOptions = {
   origin: function (origin, callBack) {
     if (whiteList.includes(origin)) {
