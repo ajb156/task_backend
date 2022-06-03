@@ -1,6 +1,7 @@
 import Usuario from '../models/Usuario.js';
 import generarId from '../helpers/generarId.js';
 import generarJWT from '../helpers/generarJWT.js';
+import { emailRegistro } from '../helpers/emails.js';
 
 /**
  * Registro de usuarios
@@ -25,9 +26,12 @@ export const registrar = async (req, res) => {
     usuario.token = generarId();
     const user = await usuario.save();
 
+    // Envio de email de confirmacion
+    await emailRegistro(user);
+
     res.status(200).json({
       msg: 'Usuario registrado Correctamente',
-      usuario,
+      user,
     });
   } catch (error) {
     res.status(400).json({

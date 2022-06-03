@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 conectarDB();
 
-const whiteList = ['*'];
+const whiteList = ['http://62.117.232.40:3000'];
 const corsOptions = {
   origin: function (origin, callBack) {
     if (whiteList.includes(origin)) {
