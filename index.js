@@ -9,9 +9,10 @@ const app = express();
 app.use(express.json());
 conectarDB();
 
-const whiteList = ['http://62.117.232.40:3000'];
+const whiteList = ['*'];
 const corsOptions = {
   origin: function (origin, callBack) {
+    console.log(origin);
     if (whiteList.includes(origin)) {
       callBack(null, true);
     } else {
@@ -20,7 +21,7 @@ const corsOptions = {
   },
 };
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // Routing
 app.use('/api', router);
