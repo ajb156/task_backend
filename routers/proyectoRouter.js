@@ -9,7 +9,7 @@ import {
   nuevoProyecto,
   obtenerProyecto,
   obtenerProyectos,
-} from '../constrollers/ProyectoController.js';
+} from '../controllers/ProyectoController.js';
 
 /** Rutas de proyectos */
 router.get('/', obtenerProyectos);

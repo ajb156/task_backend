@@ -27,7 +27,7 @@ export const registrar = async (req, res) => {
 
     res.status(200).json({
       msg: 'Usuario registrado Correctamente',
-      user,
+      usuario,
     });
   } catch (error) {
     res.status(400).json({

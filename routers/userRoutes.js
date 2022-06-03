@@ -9,7 +9,7 @@ import {
   olvidePassword,
   perfil,
   registrar,
-} from '../constrollers/UserController.js';
+} from '../controllers/UserController.js';
 
 import checkAuth from '../middleware/checkAuth.js';
 

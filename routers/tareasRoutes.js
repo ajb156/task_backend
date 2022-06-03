@@ -8,7 +8,7 @@ import {
   cambiarEstadoTarea,
   eliminarTarea,
   obtenerTarea,
-} from '../constrollers/TareaController.js';
+} from '../controllers/TareaController.js';
 
 /** Rutas de tarea */
 router.post('/', agregarTarea);
