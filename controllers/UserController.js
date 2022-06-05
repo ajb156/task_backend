@@ -1,7 +1,7 @@
 import Usuario from '../models/Usuario.js';
 import generarId from '../helpers/generarId.js';
 import generarJWT from '../helpers/generarJWT.js';
-import { emailRegistro } from '../helpers/emails.js';
+import { emailOlvidePassword, emailRegistro } from '../helpers/emails.js';
 
 /**
  * Registro de usuarios
@@ -48,6 +48,8 @@ export const registrar = async (req, res) => {
  */
 export const autenticar = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log(email);
 
   const usuario = await Usuario.findOne({ email });
 
@@ -104,7 +106,11 @@ export const confirmar = async (req, res) => {
     res.status(200).json({
       msg: 'Cuenta Confirmada',
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(403).json({
+      msg: 'No se pudo confirmar la cuenta',
+    });
+  }
 };
 
 /**
@@ -112,7 +118,8 @@ export const confirmar = async (req, res) => {
  */
 export const olvidePassword = async (req, res) => {
   const { email } = req.body;
-  const usuario = await Usuario.findOne({ token });
+  // Comprobamos si el email esta registrado
+  const usuario = await Usuario.findOne({ email });
 
   if (!usuario) {
     const error = new Error('La cuenta no existe');
@@ -124,10 +131,12 @@ export const olvidePassword = async (req, res) => {
   try {
     usuario.token = generarId();
     await usuario.save();
+    emailOlvidePassword(usuario);
     res.status(200).json({
-      message: 'Hemos enviado un email con las instrucciones',
+      msg: 'Hemos enviado un email con las instrucciones',
     });
   } catch (error) {
+    console.log(error);
     res.status(403).json({
       msg: error.message,
     });
@@ -157,7 +166,7 @@ export const comprobarToken = async (req, res) => {
 /**
  *  Actualizar el password
  */
-export const nuevoPassword = async () => {
+export const nuevoPassword = async (req, res) => {
   const { token } = req.params;
   const { password } = req.body;
   // Buscamos el usuario con el token
@@ -172,7 +181,7 @@ export const nuevoPassword = async () => {
     });
   } else {
     const error = new Error('Token invalido');
-    return res.status(404).json({
+    return res.status(403).json({
       msg: error.message,
     });
   }

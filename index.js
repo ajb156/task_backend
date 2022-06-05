@@ -9,19 +9,19 @@ const app = express();
 app.use(express.json());
 conectarDB();
 
-const whiteList = ['*'];
+const whitelist = [process.env.FRONT_HOST];
+
 const corsOptions = {
-  origin: function (origin, callBack) {
-    console.log(origin);
-    if (whiteList.includes(origin)) {
-      callBack(null, true);
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
     } else {
-      callBack(new Error('No permitido por CORS'));
+      callback(new Error());
     }
   },
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Routing
 app.use('/api', router);
