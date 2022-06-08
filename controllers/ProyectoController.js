@@ -18,7 +18,7 @@ export const nuevoProyecto = async (req, res) => {
 
   try {
     const newProyecto = await proyecto.save();
-    res.status(200).json({ newProyecto });
+    res.status(200).json(newProyecto);
   } catch (error) {
     return res.status(404).json({
       msg: error.message,
@@ -53,10 +53,14 @@ export const obtenerProyecto = async (req, res) => {
 
   // Obtener tareas del proyecto
   // Traeamos las tareas asociadas al proyecto
-  const tareas = await Tarea.find().where('proyectos').equals(proyecto._id);
+  const tareas = await Tarea.find()
+    .where('proyectos')
+    .equals(proyecto._id)
+    .populate('tarea')
+    .exec();
   proyecto.tareas = tareas;
 
-  res.status(200).json({ proyecto, tareas });
+  res.status(200).json(proyecto);
 };
 
 export const editarProyecto = async (req, res) => {
@@ -120,8 +124,6 @@ export const eliminarProyecto = async (req, res) => {
     console.log(error);
   }
 };
-
-
 
 export const agregarColaborador = async (req, res) => {};
 

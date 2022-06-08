@@ -48,9 +48,6 @@ export const registrar = async (req, res) => {
  */
 export const autenticar = async (req, res) => {
   const { email, password } = req.body;
-
-  console.log(email);
-
   const usuario = await Usuario.findOne({ email });
 
   // Comprobar que este registrado
@@ -190,5 +187,5 @@ export const nuevoPassword = async (req, res) => {
 export const perfil = async (req, res) => {
   const { usuario } = req;
 
-  res.json(usuario);
+  res.status(200).json(usuario);
 };
