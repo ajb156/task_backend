@@ -34,7 +34,7 @@ export const nuevoProyecto = async (req, res) => {
 export const obtenerProyecto = async (req, res) => {
   const { id } = req.params;
 
-  const proyecto = await Proyecto.findById(id);
+  const proyecto = await Proyecto.findById(id).populate('tareas');
 
   if (!proyecto) {
     const error = new Error('No encontrado');
@@ -53,12 +53,12 @@ export const obtenerProyecto = async (req, res) => {
 
   // Obtener tareas del proyecto
   // Traeamos las tareas asociadas al proyecto
-  const tareas = await Tarea.find()
-    .where('proyectos')
-    .equals(proyecto._id)
-    .populate('tarea')
-    .exec();
-  proyecto.tareas = tareas;
+  // const tareas = await Tarea.find()
+  //   .where('proyectos')
+  //   .equals(proyecto._id)
+  //   .populate('tareas')
+  //   .exec();
+  // proyecto.tareas = tareas;
 
   res.status(200).json(proyecto);
 };
@@ -89,7 +89,7 @@ export const editarProyecto = async (req, res) => {
 
   try {
     const updateProyect = await proyecto.save();
-    res.json({ updateProyect });
+    res.json(updateProyect);
   } catch (error) {
     console.log(error);
   }

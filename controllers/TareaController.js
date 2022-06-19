@@ -25,10 +25,10 @@ export const agregarTarea = async (req, res) => {
   try {
     const tareaAlmacenada = await Tarea.create(req.body);
     tareaAlmacenada.save();
+    existeProyecto.tareas.push(tareaAlmacenada._id);
+    existeProyecto.save();
 
-    res.status(200).json({
-      tareaAlmacenada,
-    });
+    res.status(200).json(tareaAlmacenada);
   } catch (error) {
     console.log(error);
   }
@@ -36,7 +36,7 @@ export const agregarTarea = async (req, res) => {
 
 export const obtenerTarea = async (req, res) => {
   const { id } = req.params;
-  const tarea = await Tarea.findById(id).populate('proyecto');
+  const tarea = await Tarea.findById(id);
   const { proyecto } = tarea;
 
   if (!tarea) {
@@ -87,10 +87,10 @@ export const actualizarTarea = async (req, res) => {
   tarea.fechaEntrega = req.body.fechaEntrega || tarea.fechaEntrega;
 
   try {
-    const updateTarea = await Tarea.save();
-    res.json(200).json(tarea);
+    const updateTarea = await tarea.save();
+    res.status(200).json(updateTarea);
   } catch (error) {
-    console.log(erro);
+    console.log(error);
   }
 };
 
@@ -115,11 +115,7 @@ export const eliminarTarea = async (req, res) => {
   }
 };
 
-
-const obtenerTareas = async(req, res) => {
-  
-}
-
+const obtenerTareas = async (req, res) => {};
 
 export const cambiarEstadoTarea = async (req, res) => {
   const { id } = req.params;
@@ -141,5 +137,3 @@ export const cambiarEstadoTarea = async (req, res) => {
     });
   }
 };
-
-

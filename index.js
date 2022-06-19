@@ -1,4 +1,5 @@
 import express from 'express';
+import { Server } from 'socket.io';
 import cors from 'cors';
 import conectarDB from './config/db.js';
 import router from './routers/index.js';
@@ -21,13 +22,27 @@ const corsOptions = {
   },
 };
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
+app.use(cors());
 
 // Routing
 app.use('/api', router);
 
-app.listen(process.env.PORT, process.env.HOST, () => {
+const servidor = app.listen(process.env.PORT, process.env.HOST, () => {
   console.log(
     `Servidor corriendo en: http://${process.env.HOST}:${process.env.PORT}`
   );
+});
+
+// Sockect IO
+const io = new Server(servidor, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.FRONT_HOST,
+  },
+});
+
+io.on('connection', (socket) => {
+  console.log('Conectado a Socket');
+  // Definir los eventos
 });

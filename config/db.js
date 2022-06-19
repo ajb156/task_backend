@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
 const conectarDB = async () => {
   try {
@@ -6,7 +6,7 @@ const conectarDB = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-    console.log("Base de datos conectada");
+    console.log('Base de datos conectada');
   } catch (error) {
     console.log(`Error con la BD: ${error.message}`);
     process.exit(1);
